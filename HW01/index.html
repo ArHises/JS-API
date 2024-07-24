@@ -3,8 +3,50 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="script.js"></script>
-    <title>Document</title>
+    <script src="script.js" defer></script>
+    <title>Class Schedule</title>
+    <style>
+      body {
+        background-color: black;
+        color: white;
+        font-family: Arial, sans-serif;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+      }
+      th,
+      td {
+        padding: 10px;
+        border: 1px solid white;
+        text-align: left;
+      }
+      button {
+        padding: 5px 10px;
+        margin: 2px;
+      }
+      .disabled {
+        background-color: grey;
+        cursor: not-allowed;
+      }
+    </style>
   </head>
-  <body></body>
+  <body>
+    <!-- schem -->
+    <table>
+      <thead>
+        <tr>
+          <th>Название занятия</th>
+          <th>Время</th>
+          <th>Макс. участников</th>
+          <th>Тек. участников</th>
+          <th>Записаться</th>
+          <th>Отменить запись</th>
+        </tr>
+      </thead>
+      <tbody id="scheduleTableBody"></tbody>
+    </table>
+    <!-- schem END -->
+  </body>
 </html>
