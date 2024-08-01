@@ -65,8 +65,18 @@ function isExistInLocalStorage(imgSrc) {
   return localStorage.getItem(imgSrc) !== null;
 }
 
+function loadLikedImages() {
+  const imgsHTML = "";
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    items[key] = localStorage.getItem(key);
+  }
+  imageContainerElem.innerHTML += imgsHTML;
+}
+
 async function main() {
   const data = await fetchImages(currentPage);
+  console.log(data);
   let imgsHTML = "";
   data.forEach((element) => {
     if (isExistInLocalStorage(element.urls.regular)) {
