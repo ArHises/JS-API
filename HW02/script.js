@@ -16,7 +16,7 @@ function updateSlider() {
 
   // Update the dots
   dots.forEach((dot, index) => {
-    dot.style.color = index === currentIndex ? "grey" : "white";
+    dot.style.color = index === currentIndex ? "white" : "grey";
   });
 
   resetInterval();
@@ -29,7 +29,6 @@ function showPrevImage() {
 
 function showNextImage() {
   currentIndex = (currentIndex + 1) % images.length;
-  console.log(currentIndex);
   updateSlider();
 }
 
