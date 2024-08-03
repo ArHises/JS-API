@@ -16,3 +16,4 @@ Image loader that can be used to like images:
 - fetching API from Unsplash.
 - loading the images to the page.
 - saving likes to LocalStorage.
+- load images to the page.

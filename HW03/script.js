@@ -24,12 +24,12 @@ async function fetchImages() {
 
 function createImg(post) {
   return `<div class="photo">
-          <img src="${post.src}" alt="${post.author}" />
-          <h2 class="author">${post.author}</h2>
-          <input class="like" type="checkbox" id="like-${post.id}"/>
-          <label for="like-${post.id}" class="like-label">Like</label>
-          <p class="counter">Likes: <span>${post.likes}</span></p>
-        </div>`;
+            <img src="${post.src}" alt="${post.author}" />
+            <h2 class="author">${post.author}</h2>
+            <input class="like" type="checkbox" id="like-${post.id}"/>
+            <label for="like-${post.id}" class="like-label">Like</label>
+            <p class="counter">Likes: <span>${post.likes}</span></p>
+          </div>`;
 }
 
 async function convertToObjects(data) {
@@ -46,10 +46,43 @@ async function convertToObjects(data) {
   return simpleObjectArray;
 }
 
+function addLikeToggle(likeButton) {
+  likeButton.addEventListener("click", (e) => {
+    const likeLabel = e.target.nextElementSibling;
+    const countElem = e.target.closest(".photo").querySelector(".counter span");
+    let post = JSON.parse(localStorage.getItem(e.target.id));
+
+    if (e.target.checked) {
+      countElem.innerHTML = parseInt(countElem.innerHTML, 10) + 1;
+      likeLabel.innerHTML = "Unlike";
+      post.likes++;
+      post.liked_by_user = true;
+    } else {
+      countElem.innerHTML = parseInt(countElem.innerHTML, 10) - 1;
+      likeLabel.innerHTML = "Like";
+      post.likes--;
+      post.liked_by_user = false;
+    }
+
+    localStorage.setItem(e.target.id, JSON.stringify(post));
+  });
+}
+
 function loadImages(imageList) {
   imageContainerElem.innerHTML = "";
   imageList.forEach((img) => {
-    imageContainerElem.innerHTML += createImg(img);
+    const imgNode = document.createElement("div");
+    imgNode.innerHTML = createImg(img);
+    if (img.liked_by_user) {
+      imgNode.querySelector(".like").checked = true;
+      imgNode.querySelector(".like-label").innerHTML = "Unlike";
+    }
+    imageContainerElem.appendChild(imgNode);
+  });
+
+  const buttons = document.querySelectorAll(".photo .like");
+  buttons.forEach((btn) => {
+    addLikeToggle(btn);
   });
 }
 
@@ -57,6 +90,9 @@ async function main() {
   try {
     const data = await fetchImages();
     const objects = await convertToObjects(data);
+    objects.forEach((obj) => {
+      localStorage.setItem(`like-${obj.id}`, JSON.stringify(obj));
+    });
     loadImages(objects);
     console.log(objects);
   } catch (error) {
@@ -66,46 +102,14 @@ async function main() {
 
 main();
 
-// function attachLikeListener() {
-//   const likeButtons = document.querySelectorAll(".like");
-//   likeButtons.forEach((button) => {
-//     button.addEventListener("click", (e) => {
-//       const counterElem =
-//         e.target.nextElementSibling.nextElementSibling.querySelector("span");
-
-//       let likeCount = parseInt(counterElem.textContent, 10);
-//       const imgSrc = e.target.closest(".photo").querySelector("img").src;
-//       const authorName = e.target.closest(".author").textContent;
-
-//       if (e.target.checked) {
-//         counterElem.textContent = ++likeCount;
-//       } else {
-//         counterElem.textContent = --likeCount;
-//       }
-//       saveToLocalStorage(imgSrc, { likes: likeCount, author: authorName });
-//     });
-//   });
-// }
-
-// async function main() {
-//   const data = await fetchImages(currentPage);
-//   console.log(data);
-//   let imgsHTML = "";
-//   data.forEach((element) => {
-//     if (isExistInLocalStorage(element.urls.regular)) {
-//       element.likes = getFromLocalStorage(element.urls.regular);
-//     }
-//     imgsHTML += createImg(element);
-//   });
-//   currentPage++;
-//   imageContainerElem.innerHTML += imgsHTML;
-//   attachLikeListener();
-// }
-
-// loadHistoryButton.addEventListener("click", () => {
-//   if (!isFetching) {
-//     main();
-//   }
-// });
-
-// main();
+loadHistoryButton.addEventListener("click", () => {
+  if (!isFetching) {
+    const storedImages = [];
+    for (let key in localStorage) {
+      if (localStorage.hasOwnProperty(key) && key.startsWith("like-")) {
+        storedImages.push(JSON.parse(localStorage.getItem(key)));
+      }
+    }
+    loadImages(storedImages);
+  }
+});

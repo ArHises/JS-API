@@ -1,6 +1,9 @@
 body {
   background-color: rgb(23, 23, 23);
   color: aliceblue;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 .image-container {
@@ -45,4 +48,20 @@ body {
 }
 .like:checked + .like-label {
   background-color: #a1a1a1;
+}
+
+.load-history {
+  padding: 10px;
+  background-color: #425eef;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.load-history:hover {
+  box-shadow: 3px 2px 2px rgb(255, 255, 255);
+  background-color: #91a2f7;
+  color: black;
 }
